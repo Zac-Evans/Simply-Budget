@@ -8,7 +8,7 @@ const Sequelize = require("sequelize");
 // For bcrypt
 const saltRounds = 10;
 const bcrypt = require("bcrypt");
-// const { eq } = require("sequelize/types/lib/operators");
+//const { eq } = require("sequelize/types/lib/operators");
 let userLoggedIn = false;
 
 function authenticationMiddleware(req, res, next) {
@@ -21,45 +21,26 @@ function authenticationMiddleware(req, res, next) {
   }
 }
 
+router.post("/user/:user_id/budget/create", (req, res) => {
+  if (!req.body.category_name) {
+    res.status(409).send("Please enter the budget name");
+  }
+  if (!req.body.category_budget || isNaN(req.body.category_budget)) {
+    res.status(409).send("Please enter budget amount");
+  }
+
+  db.budget_categories
+    .create({
+      category_name: req.body.category_name,
+      category_budget: req.body.category_budget,
+      user_id: req.params.user_id,
+    })
+    .then((user) => res.json(user))
+    .catch((err) => res.send(err));
+});
+
 //Grab all the specific User's categories
 router.get("/user/:user_id/budget", (req, res) => {
-  db.budget_categories
-    .findAll({
-      where: {
-        user_id: req.params.user_id,
-      },
-    })
-    .then((budget_categories) => res.send(budget_categories));
-});
-
-//Get a single category
-router.get("/user/:user_id/budget/category/:category_id", (req, res) => {
-  db.budget_categories
-    .findAll({
-      where: {
-        user_id: req.params.user_id,
-        id: req.params.category_id,
-      },
-    })
-    .then((purchases) => res.send(purchases));
-});
-
-//Delete a category
-router.delete("/user/:user_id/budget/category/:category_id", (req, res) => {
-  db.budget_categories
-    .destroy({
-      where: {
-        user_id: req.params.user_id,
-        id: req.params.category_id,
-      },
-    })
-    .then(() => res.send("success"))
-
-    .catch(() => res.send("fail"));
-});
-
-//Grab all the specific User's categories
-router.get("/budget/:user_id", (req, res) => {
   db.budget_categories
     .findAll({
       where: {

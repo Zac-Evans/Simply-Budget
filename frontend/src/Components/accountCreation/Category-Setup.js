@@ -9,12 +9,12 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
-export default class BillSetup extends Component {
+export default class CategorySetup extends Component {
   constructor() {
     super();
     this.state = {
-      bill_name: "",
-      bill_amount: 0,
+      category_name: "",
+      category_budget: 0,
       next: false,
       back: false,
       show: false,
@@ -29,26 +29,25 @@ export default class BillSetup extends Component {
     e.preventDefault();
     this.setState({ [e.target.id]: e.target.value });
   };
+
   handleSubmit = (e) => {
     e.preventDefault();
-    if (isNaN(this.state.bill_amount)) {
+    if (isNaN(this.state.category_budget) || !this.state.category_budget) {
       return this.setState({ show: true });
     }
-    if (!this.state.bill_amount && this.state.bill_name) {
-      return this.setState({ show: true });
-    }
-    if (this.state.bill_amount && !this.state.bill_name) {
+    if (!this.state.category_name) {
       return this.setState({ show: true });
     }
     axios
       .post(
-        `http://localhost:8000/bills/create/${localStorage.getItem("userId")}`,
+        `http://localhost:8000/user/${localStorage.getItem("userId")}/budget/create`,
         {
-          bill_name: this.state.bill_name,
-          bill_amount: this.state.bill_amount,
+          category_name: this.state.category_name,
+          category_budget: this.state.category_budget,
         }
       )
-      .then(() => window.location.reload());
+      .then(() => window.location.reload())
+      .catch((err) => console.log(err));
   };
 
   back = () => {
@@ -60,16 +59,16 @@ export default class BillSetup extends Component {
 
   render() {
     if (this.state.next) {
-      return <Redirect push to="/category-setup" />;
+      return <Redirect push to="/dashboard" />;
     }
     if (this.state.back) {
-      return <Redirect push to="/income-setup" />;
+      return <Redirect push to="/bill-setup" />;
     }
-    //This is for the fail modal
+    // This is for the fail modal
     if (this.state.show) {
       return (
         <FailModal
-          errText="Please try again"
+          errText="Please enter a Category Budget"
           close={this.close}
           show={this.state.show}
         />
@@ -82,10 +81,11 @@ export default class BillSetup extends Component {
       >
         <div style={divStyle} className="w-50 mx-auto">
           <div className="text-center">
-            <h4 className="mb-4">Great, time to do your bills</h4>
+            <h4 className="mb-4">Now for the fun part!</h4>
 
             <p style={{ fontSize: "20px", marginBottom: "40px" }}>
-              Enter in the name and amount of your monthly bills
+              Let's set some personlized budgets <br /> such as Groceries, Food,
+              and Dates.
             </p>
           </div>
 
@@ -96,13 +96,13 @@ export default class BillSetup extends Component {
           >
             {/* These are the inputs */}
             <TextInput
-              placeholder="Ex. Car Payment"
-              id="bill_name"
+              placeholder="Enter budget name"
+              id="category_name"
               handleChange={this.handleChange}
             />
             <NumberInput
-              placeholder="Ex. 200"
-              id="bill_amount"
+              placeholder="Enter monthly budget amount"
+              id="category_budget"
               handleChange={this.handleChange}
             />
 
@@ -116,7 +116,7 @@ export default class BillSetup extends Component {
               type="submit"
               className="mb-4"
             >
-              Add this bill
+              Add this category
             </Button>
             <Row className="mx-auto">
               {/* Back button */}
@@ -133,7 +133,7 @@ export default class BillSetup extends Component {
                 </Button>
               </Col>
               {/* Submit Button */}
-              <Col md={{ span: 4, offset: 4 }}>
+              <Col md={{span: 4, offset: 4}}>
                 <Button
                   style={{
                     border: "1px solid rgb(173, 173, 173)",

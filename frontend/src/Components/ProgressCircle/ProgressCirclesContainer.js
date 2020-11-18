@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchCategories } from "../../actions/";
+import { fetchCategories } from "../../actions";
 import ProgressCircle from "./ProgressCircle";
 import { Row } from "react-bootstrap";
 import IndividualBudgetProgressBar from "./IndividualBudgetProgressBar";
