@@ -35,6 +35,7 @@ function createData(
   transactionName,
   transactionAmount,
   budgetCategory,
+  notes,
   budgetRemaining
 ) {
   return {
@@ -43,15 +44,10 @@ function createData(
     transactionName,
     transactionAmount,
     budgetCategory,
+    notes,
     budgetRemaining,
   };
 }
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 700,
-  },
-});
 
 class TransactionList extends Component {
   componentDidMount() {
@@ -60,21 +56,24 @@ class TransactionList extends Component {
   }
 
   render() {
-    const rows = this.props.purchases.map((purchase) =>
-      createData(
+    const rows = this.props.purchases.map((purchase) => {
+      let purchaseDate = new Date(purchase.createdAt).toLocaleDateString(
+        "en-US"
+      );
+      return createData(
         purchase.id,
-        purchase.createdAt,
+        purchaseDate,
         purchase.purchase_name,
         purchase.price,
         purchase.budget_category.category_name,
+        purchase.purchase_notes,
         purchase.budget_category.budget_remaining
-      )
-    );
-    console.log(DateTime.fromISO(this.props.purchases.purchase_name).toJSDate);
-    console.log(rows);
+      );
+    });
+
     return (
       <TableContainer component={Paper}>
-        {this.props.purchases && (
+        {this.props.purchases[0] && (
           <Table aria-label="customized table">
             <TableHead>
               <TableRow>
@@ -94,7 +93,7 @@ class TransactionList extends Component {
                     {row.date}
                   </StyledTableCell>
                   <StyledTableCell>{row.transactionName}</StyledTableCell>
-
+                  <StyledTableCell>{row.notes}</StyledTableCell>
                   <StyledTableCell align="center">
                     {row.transactionAmount}
                   </StyledTableCell>
