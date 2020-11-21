@@ -16,6 +16,7 @@ import Dashboard from "./components/Dashboard";
 import Header from "./components/Header";
 import { Container } from "@material-ui/core";
 import "./css/App.css";
+import TransactionList from "./components/TransactionList";
 
 export default class App extends Component {
   render() {
@@ -44,6 +45,7 @@ export default class App extends Component {
             <Route path="/bill-setup" component={Bill_Setup} />
             <Route path="/category-setup" component={Category_Setup} />
             <Route path="/dashboard" component={Dashboard} />
+            <Route path="/transactions" component={TransactionList} />
           </Switch>
         </Router>
       </div>
