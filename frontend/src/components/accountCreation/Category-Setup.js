@@ -14,7 +14,7 @@ export default class CategorySetup extends Component {
     super();
     this.state = {
       category_name: "",
-      category_budget: 0,
+      category_budget: "",
       next: false,
       back: false,
       show: false,
@@ -28,6 +28,7 @@ export default class CategorySetup extends Component {
   handleChange = (e) => {
     e.preventDefault();
     this.setState({ [e.target.id]: e.target.value });
+    console.log(this.state);
   };
 
   handleSubmit = (e) => {
@@ -40,10 +41,13 @@ export default class CategorySetup extends Component {
     }
     axios
       .post(
-        `http://localhost:8000/user/${localStorage.getItem("userId")}/budget/create`,
+        `http://localhost:8000/user/${localStorage.getItem(
+          "userId"
+        )}/budget/create`,
         {
           category_name: this.state.category_name,
           category_budget: this.state.category_budget,
+          budget_remaining: this.state.category_budget,
         }
       )
       .then(() => window.location.reload())
@@ -133,7 +137,7 @@ export default class CategorySetup extends Component {
                 </Button>
               </Col>
               {/* Submit Button */}
-              <Col md={{span: 4, offset: 4}}>
+              <Col md={{ span: 4, offset: 4 }}>
                 <Button
                   style={{
                     border: "1px solid rgb(173, 173, 173)",

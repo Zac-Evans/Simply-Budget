@@ -7,6 +7,12 @@ export const fetchCategories = (user_id) => async (dispatch) => {
   dispatch({ type: "FETCH_CATEGORIES", payload: response.data });
 };
 
+//Fetch purchases with categories for specific user
+export const fetchPurchasesWithCategory = (user_id) => async (dispatch) => {
+  const response = await API.get(`/user/${user_id}/category/purchases`);
+  dispatch({ type: "FETCH_PURCHASES_WITH_CATEGORY", payload: response.data });
+};
+
 // //Fetch specific category for specific user
 // export const fetchCategory = (user_id, category_id) => async (dispatch) => {
 //   const response = await API.get(

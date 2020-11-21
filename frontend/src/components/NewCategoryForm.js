@@ -4,13 +4,18 @@ import { Button } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-
+import ReactSnackBar from "react-js-snackbar";
 const userId = localStorage.getItem("userId");
 
 class NewCategoryForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { category_name: "", category_budget: "" };
+    this.state = {
+      category_name: "",
+      category_budget: "",
+      Show: false,
+      Showing: false,
+    };
   }
 
   handleChange = (e) => {
@@ -18,24 +23,75 @@ class NewCategoryForm extends Component {
   };
 
   handleCategorySubmit = (e) => {
+    if (!this.state.category_name || !this.state.category_budget) {
+      e.preventDefault();
+      if (this.state.Showing) return;
+
+      this.setState({ Show: true, Showing: true });
+      setTimeout(() => {
+        this.setState({ Show: false, Showing: false });
+      }, 2000);
+    }
     axios
       .post(`http://localhost:8000/user/${userId}/budget/create`, {
         category_name: this.state.category_name,
         category_budget: this.state.category_budget,
         budget_remaining: this.state.category_budget,
       })
-      .then(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
+      .then((response) => {
+        if (this.state.Showing) return;
+
+        e.preventDefault();
+        this.setState({ Show: true, Showing: true });
+        setTimeout(() => {
+          this.setState({
+            Show: false,
+            Showing: false,
+          });
+        }, 2000);
+        setTimeout(() => {
+          this.setState({
+            category_name: "",
+            category_id: "",
+            budget_remaining: "",
+            purchase_name: "",
+            price: "",
+            purchase_notes: "",
+          });
+        }, 3100).catch((error) => {
           console.log(error);
-        }
-      );
+        });
+      });
   };
 
   render() {
-    console.log(this.state);
+    const renderSnackBar = () => {
+      if (
+        !this.state.category_name ||
+        !this.state.category_budget ||
+        !this.state.budget_remaining
+      ) {
+        return (
+          <ReactSnackBar
+            Icon={<span>🦄</span>}
+            value="Show"
+            Show={this.state.Show}
+          >
+            Please fill out required fields
+          </ReactSnackBar>
+        );
+      } else {
+        return (
+          <ReactSnackBar
+            Icon={<span>🦄</span>}
+            value="Show"
+            Show={this.state.Show}
+          >
+            Transaction added!
+          </ReactSnackBar>
+        );
+      }
+    };
     return (
       <div>
         <Form className=" m-4 d-flex flex-column align-items-center">
@@ -52,7 +108,7 @@ class NewCategoryForm extends Component {
               controlId="formGridCategoryName"
             >
               <Form.Label>
-                <b>Category Name</b>
+                <b>*Category Name</b>
               </Form.Label>
               <Form.Control
                 as="select"
@@ -74,7 +130,7 @@ class NewCategoryForm extends Component {
               controlId="formGridCustomCategory"
             >
               <Form.Label>
-                <b>Custom Category</b>
+                <b>*Custom Category</b>
               </Form.Label>
               <Form.Control
                 value={this.state.category_name}
@@ -97,7 +153,7 @@ class NewCategoryForm extends Component {
 
             <Form.Group controlId="formGridAddress1">
               <Form.Label>
-                <b>Monthly Budget</b>
+                <b>*Monthly Budget</b>
               </Form.Label>
               <Form.Control
                 placeholder="$100"
@@ -114,6 +170,8 @@ class NewCategoryForm extends Component {
           >
             Create Category
           </Button>
+          <p className="mt-3 mb-0">* required</p>
+          {renderSnackBar()}
         </Form>
       </div>
     );

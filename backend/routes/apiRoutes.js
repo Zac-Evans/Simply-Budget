@@ -441,4 +441,31 @@ router.get("/user/:user_id/search-prices", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+//Get purchases from a specific category
+//Get all of a specific user’s purchases
+router.get("/user/:user_id/category/purchases", (req, res) => {
+  db.purchases
+    .findAll({
+      // attributes: [
+      //   [
+      //     Sequelize.fn(
+      //       "to_date",
+      //       Sequelize.col("purchases.createdAt"),
+      //       "%m-%d-%Y"
+      //     ),
+      //     "createdAt",
+      //   ],
+      // ],
+      where: {
+        user_id: req.params.user_id,
+      },
+      include: [
+        {
+          model: db.budget_categories,
+        },
+      ],
+    })
+    .then((purchases) => res.send(purchases))
+    .catch((err) => console.log(err));
+});
 module.exports = router;

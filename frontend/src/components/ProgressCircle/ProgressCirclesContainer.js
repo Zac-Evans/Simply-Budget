@@ -14,6 +14,7 @@ import AddCategoryCard from "../AddCategoryCard";
 import MoneySpentRecentlyCard from "../MoneySpentRecentlyCard";
 import AddIcon from "@material-ui/icons/Add";
 import NewCategoryCircle from "../NewCategoryCircle";
+import TransactionList from "../TransactionList";
 
 class ProgressCirclesContainer extends Component {
   componentDidMount() {
@@ -91,6 +92,7 @@ class ProgressCirclesContainer extends Component {
             </Paper>
           </div>
         )}
+        <TransactionList />
       </div>
     );
   }

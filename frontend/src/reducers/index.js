@@ -4,6 +4,7 @@ import categoryReducer from "./categoryReducer";
 import billsReducer from "./billsReducer";
 import purchasesReducer from "./purchasesReducer";
 import userReducer from "./userReducer";
+import purchasesWithCategoryReducer from "./purchasesWithCategoryReducer";
 
 export default combineReducers({
   categories: categoriesReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   purchases: purchasesReducer,
   user: userReducer,
   category: categoryReducer,
+  purchasesWithCategory: purchasesWithCategoryReducer,
 });
