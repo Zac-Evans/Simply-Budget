@@ -8,6 +8,7 @@ const Sequelize = require("sequelize");
 // For bcrypt
 const saltRounds = 10;
 const bcrypt = require("bcrypt");
+const { sequelize } = require("../models");
 // const { eq } = require("sequelize/types/lib/operators");
 let userLoggedIn = false;
 
@@ -34,7 +35,7 @@ router.post("/user/:user_id/budget/create", (req, res) => {
     .create({
       category_name: req.body.category_name,
       category_budget: req.body.category_budget,
-      budget_remaining: req.body.budget_remaining,
+      budget_remaining: req.body.category_budget,
       user_id: req.params.user_id,
     })
     .then((user) => res.json(user))
@@ -75,7 +76,7 @@ router.delete("/user/:user_id/budget/category/:category_id", (req, res) => {
     })
     .then(() => res.send("success"))
 
-    .catch(() => res.send("fail"));
+    .catch((response) => res.send(response));
 });
 
 //Update a category
@@ -168,7 +169,7 @@ router.post("/login", (req, res) => {
       });
     })
     .catch((e) => {
-      res.status(404).send("Email/Password combination did not match");
+      res.status(404).send(e);
     });
 });
 

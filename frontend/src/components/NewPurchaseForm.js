@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Form, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Form, Col, Row, InputGroup } from "react-bootstrap";
 import { Button } from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { connect } from "react-redux";
 import { fetchCategories } from "../actions";
@@ -65,25 +65,25 @@ class NewPurchaseForm extends Component {
       }, 2000);
     }
 
+    axios.post(
+      `https://simply-budget-backend.herokuapp.com/user/${userId}/purchases/create`,
+      {
+        category_id: this.state.category_id,
+        purchase_name: this.state.purchase_name,
+        purchase_notes: this.state.purchase_notes,
+        price: parseInt(this.state.price),
+      }
+    );
+
     axios
-      .post(
-        `https://simply-budget-backend.herokuapp.com/user/${userId}/purchases/create`,
+      .put(
+        `https://simply-budget-backend.herokuapp.com/user/${userId}/budget/category/${this.state.category_id}`,
         {
-          category_id: this.state.category_id,
-          purchase_name: this.state.purchase_name,
-          purchase_notes: this.state.purchase_notes,
-          price: parseInt(this.state.price),
+          budget_remaining: this.state.budget_remaining - this.state.price,
         }
       )
-      .then(
-        axios.put(
-          `https://simply-budget-backend.herokuapp.com/user/${userId}/budget/category/${this.state.category_id}`,
-          {
-            budget_remaining: this.state.budget_remaining - this.state.price,
-          }
-        )
-      )
-      .then((response) => {
+
+      .then(() => {
         if (this.state.Showing) return;
         e.preventDefault();
         this.setState({ Show: true, Showing: true });
@@ -102,22 +102,23 @@ class NewPurchaseForm extends Component {
             price: "",
             purchase_notes: "",
           });
-        }, 3100);
+        }, 3500);
       })
-
       .catch((error) => {
         console.log(error);
       });
   };
 
   render() {
-    const categoryList = this.props.categories.map((category) => {
-      return {
-        category_name: category.category_name,
-        category_id: category.id,
-        budget_remaining: category.budget_remaining,
-      };
-    });
+    const categoryList = this.props.categories
+      .map((category) => {
+        return {
+          category_name: category.category_name,
+          category_id: category.id,
+          budget_remaining: category.budget_remaining,
+        };
+      })
+      .sort((a, b) => (a.category_name > b.category_name ? 1 : -1));
 
     const renderSnackBar = () => {
       if (
@@ -193,7 +194,7 @@ class NewPurchaseForm extends Component {
               controlId="formGridCustomCategory"
             >
               <Form.Label>
-                <b>*Transaction Name</b>
+                <b>*Purchase</b>
               </Form.Label>
               <Form.Control
                 value={this.state.purchase_name}
@@ -205,31 +206,38 @@ class NewPurchaseForm extends Component {
             </Form.Group>
           </Form.Row>
           <hr />
-          <Form.Row className="d-flex justify-content-start">
-            <Form.Group>
+          <Form.Group>
+            <Row className="d-flex justify-content-center">
+              {/* <Form.Group>
               <FontAwesomeIcon
                 className="text-center m-4"
                 style={{ fontSize: "60px" }}
                 icon={faCoffee}
               />
-            </Form.Group>
+            </Form.Group> */}
 
-            <Form.Group controlId="formGridAddress1">
-              <Form.Label>
-                <b className="ml-3">*Amount</b>
-              </Form.Label>
-              <Form inline>
-                <Form.Label>$</Form.Label>
-                <Form.Control
-                  placeholder="20"
-                  name="price"
-                  className="float-right"
-                  value={this.state.price}
-                  onChange={this.handleChange}
-                />
-              </Form>
-            </Form.Group>
-          </Form.Row>
+              <Col className="col-4 text-center">
+                <h5 style={{ marginTop: "5px" }}>
+                  <b>*Amount:</b>
+                </h5>
+              </Col>
+
+              <Col className="col-6">
+                <InputGroup className="mb-2">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text>$</InputGroup.Text>
+                  </InputGroup.Prepend>
+                  <Form.Control
+                    placeholder="20.00"
+                    name="price"
+                    className="text-left"
+                    value={this.state.price}
+                    onChange={this.handleChange}
+                  />
+                </InputGroup>
+              </Col>
+            </Row>
+          </Form.Group>
 
           <Form.Group
             style={{ width: "300px" }}
@@ -246,21 +254,22 @@ class NewPurchaseForm extends Component {
               onChange={this.handleChange}
             />
           </Form.Group>
-          <Button
-            variant="contained"
-            type="button"
-            onClick={this.handlePurchaseSubmit}
-          >
-            Add Transaction
-          </Button>
-          {/* <Button
-            className="m-4"
-            variant="contained"
-            type="submit"
-            color="secondary"
-          >
-            Cancel
-          </Button> */}
+
+          <Form.Group className="d-flex justify-content-start">
+            <Button className="m-4" variant="contained" type="submit">
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              type="button"
+              className="m-4 text-white"
+              style={{ backgroundColor: "rgb(71, 117, 62)" }}
+              onClick={this.handlePurchaseSubmit}
+            >
+              <b>Add</b>
+            </Button>
+          </Form.Group>
+
           <p className="mt-3 mb-0">* required</p>
           {renderSnackBar()}
         </Form>

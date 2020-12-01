@@ -1,28 +1,67 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchCategories } from "../../actions/";
+import {
+  fetchCategories,
+  fetchUser,
+  fetchPurchasesWithCategory,
+} from "../../actions/";
 import ProgressCircle from "./ProgressCircle";
 import { Row } from "react-bootstrap";
-import IndividualBudgetProgressBar from "./IndividualBudgetProgressBar";
+import { DateTime } from "luxon";
 import TotalProgressBar from "./TotalProgressBar";
-import Header from "../Header";
 import { fadeInUp } from "react-animations";
 import Radium, { StyleRoot } from "radium";
-import { Fab, Paper } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import AddPurchaseCard from "../AddPurchaseCard";
 import AddCategoryCard from "../AddCategoryCard";
-import MoneySpentRecentlyCard from "../MoneySpentRecentlyCard";
-import AddIcon from "@material-ui/icons/Add";
 import NewCategoryCircle from "../NewCategoryCircle";
-import TransactionList from "../TransactionList";
+// import { Circle } from "react-spinners-css";
+import { Fade } from "react-awesome-reveal";
 
 class ProgressCirclesContainer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selectedMonth: DateTime.local().month - 1,
+      selectedYear: DateTime.local().year,
+    };
+  }
+
   componentDidMount() {
     const userId = localStorage.getItem("userId");
     this.props.fetchCategories(userId);
+    this.props.fetchUser(userId);
+    this.props.fetchPurchasesWithCategory(userId);
   }
+  createData = (purchaseMonth, purchaseYear, purchaseDate) => {
+    return {
+      purchaseMonth,
+      purchaseYear,
+      purchaseDate,
+    };
+  };
 
   render() {
+    const rows = this.props.purchases.map((purchase) => {
+      let purchaseMonth = new Date(purchase.createdAt).getMonth();
+      let purchaseYear = new Date(purchase.createdAt).getFullYear();
+      let purchaseDate = new Date(purchase.createdAt).toLocaleDateString(
+        "en-US"
+      );
+      return this.createData(purchaseMonth, purchaseYear, purchaseDate);
+    });
+
+    let thisMonthTransactions = [];
+    for (let i = 0; i < rows.length; i++) {
+      if (
+        rows[i].purchaseMonth === this.state.selectedMonth &&
+        rows[i].purchaseYear === this.state.selectedYear
+      ) {
+        thisMonthTransactions.push(rows[i]);
+      }
+    }
+
     const totalBudget = this.props.categories.map((category) => {
       return category.category_budget;
     });
@@ -43,30 +82,23 @@ class ProgressCirclesContainer extends Component {
       },
     };
 
+    const categoryList = this.props.categories.sort((a, b) =>
+      a.category_name > b.category_name ? 1 : -1
+    );
+
+    console.log(this.props);
     return (
-      <div className="mb-4">
-        {addedRemainingBudget && (
+      <div className=" mb-4 p-0 w-100">
+        {!this.props.categories[0] || !this.props.user[0] ? (
           <div>
-            <TotalProgressBar
-              totalBudget={addedBudget}
-              budget_remaining={addedRemainingBudget}
-            />
+            <Fade className="text-center m-2" direction="up" triggerOnce>
+              <h1>Create a new budget to get started!</h1>
+            </Fade>
             <Row className="d-flex justify-content-around">
               <AddPurchaseCard />
-              <MoneySpentRecentlyCard />
+              {/* <MoneySpentRecentlyCard /> */}
               <AddCategoryCard />
             </Row>
-            {/* <div>
-              {this.props.categories.map((category) => (
-                <IndividualBudgetProgressBar
-                  key={category.id}
-                  categoryId={category.id}
-                  budget_remaining={category.budget_remaining}
-                  category_budget={category.category_budget}
-                  category_name={category.category_name}
-                />
-              ))}
-            </div> */}
             <Paper
               className="p-2"
               elevation={3}
@@ -74,15 +106,61 @@ class ProgressCirclesContainer extends Component {
             >
               <div className="mx-auto">
                 <Row className="d-flex justify-content-center">
-                  {this.props.categories.map((category) => (
-                    <ProgressCircle
-                      key={category.id}
-                      categoryId={category.id}
-                      budget_remaining={category.budget_remaining}
-                      category_budget={category.category_budget}
-                      category_name={category.category_name}
-                    />
-                  ))}
+                  {this.props.categories[0] &&
+                    categoryList.map((category) => (
+                      <ProgressCircle
+                        key={category.id}
+                        categoryId={category.id}
+                        budget_remaining={category.budget_remaining}
+                        category_budget={category.category_budget}
+                        category_name={category.category_name}
+                      />
+                    ))}
+                  <StyleRoot style={styles.fadeInUp}>
+                    <h2>&zwnj; </h2>
+                    <NewCategoryCircle />
+                  </StyleRoot>
+                </Row>
+              </div>
+            </Paper>
+          </div>
+        ) : (
+          // <div
+          //   className="d-flex vh-100 align-items-center justify-content-center"
+          //   style={{ marginTop: "-190px" }}
+          // >
+          //   <Fade>
+          //     <Circle size={150} color="#47753e" />
+          //   </Fade>
+          // </div>
+          <div>
+            <TotalProgressBar
+              totalBudget={addedBudget}
+              budget_remaining={addedRemainingBudget}
+              income={this.props.user[0].income}
+            />
+            <Row className="d-flex justify-content-around">
+              <AddPurchaseCard />
+              {/* <MoneySpentRecentlyCard /> */}
+              <AddCategoryCard />
+            </Row>
+            <Paper
+              className="p-2"
+              elevation={3}
+              style={{ backgroundColor: "#" }}
+            >
+              <div className="mx-auto">
+                <Row className="d-flex justify-content-center">
+                  {this.props.categories[0] &&
+                    this.props.categories.map((category) => (
+                      <ProgressCircle
+                        key={category.id}
+                        categoryId={category.id}
+                        budget_remaining={category.budget_remaining}
+                        category_budget={category.category_budget}
+                        category_name={category.category_name}
+                      />
+                    ))}
                   <StyleRoot style={styles.fadeInUp}>
                     <h2>&zwnj; </h2>
                     <NewCategoryCircle />
@@ -92,16 +170,21 @@ class ProgressCirclesContainer extends Component {
             </Paper>
           </div>
         )}
-        <TransactionList />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  return { categories: state.categories };
+  return {
+    categories: state.categories,
+    user: state.user,
+    purchases: state.purchasesWithCategory,
+  };
 };
 
-export default connect(mapStateToProps, { fetchCategories })(
-  ProgressCirclesContainer
-);
+export default connect(mapStateToProps, {
+  fetchCategories,
+  fetchUser,
+  fetchPurchasesWithCategory,
+})(ProgressCirclesContainer);

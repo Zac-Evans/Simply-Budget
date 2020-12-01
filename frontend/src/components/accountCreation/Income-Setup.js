@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import { Button, Col, Row } from "react-bootstrap";
 import NumberInput from "./Number-Input";
 import FailModal from "../loginComponents/Fail-Modal";
+import Logo from "../../images/simply-logo-white.png";
 
 export default class IncomeSetup extends Component {
   constructor() {
@@ -45,7 +46,7 @@ export default class IncomeSetup extends Component {
 
   render() {
     if (this.state.next) {
-      return <Redirect push to="/bill-setup" />;
+      return <Redirect push to="/category-setup" />;
     }
     if (this.state.show) {
       return (
@@ -58,14 +59,32 @@ export default class IncomeSetup extends Component {
     }
     return (
       <div
-        className="vw-100 vh-100"
-        style={{ paddingTop: "150px", backgroundColor: "rgb(71, 117, 62)" }}
+        style={{
+          backgroundColor: "rgb(71, 117, 62)",
+          minHeight: "100vh",
+        }}
+        className="d-flex flex-column justify-content-center align-items-stretch"
       >
-        <div style={divStyle} className="w-50 mx-auto">
+        <div className="d-flex justify-content-center">
+          <Col className="d-flex justify-content-end align-items-center">
+            <Link to="/register">
+              <h5 className="text-white p-0 m-0">← Back</h5>
+            </Link>
+          </Col>
+          <Col className="d-flex justify-content-center m-0 p-0">
+            <img
+              width="200px"
+              height="120px"
+              className="mb-4 ml-0 mr-0 p-0"
+              src={Logo}
+            />
+          </Col>
+          <Col />
+        </div>
+        <div style={divStyle} className="mx-auto">
           <div className="text-center">
             <h4 className="mb-4">
-              Now that we've created an account
-              <br /> let's setup your{" "}
+              <br /> Let's setup your{" "}
               <strong style={{ color: "rgb(71, 117, 62)" }}>
                 Simply Budget
               </strong>
@@ -78,7 +97,7 @@ export default class IncomeSetup extends Component {
 
           <Form
             className="mx-auto"
-            style={{ maxWidth: "400px" }}
+            style={{ maxWidth: "500px" }}
             onSubmit={this.handleSubmit}
           >
             <NumberInput
@@ -86,16 +105,18 @@ export default class IncomeSetup extends Component {
               id="income"
               handleChange={this.handleChange}
             />
-            <Button
-              style={{
-                border: "1px solid rgb(173, 173, 173)",
-                backgroundColor: "rgb(71, 117, 62)",
-                width: "100%",
-              }}
-              type="submit"
-            >
-              Next
-            </Button>
+            <Row className="d-flex justify-content-center">
+              <Button
+                style={{
+                  border: "1px solid rgb(173, 173, 173)",
+                  backgroundColor: "rgb(60, 60, 60)",
+                  width: "30%",
+                }}
+                type="submit"
+              >
+                <b>Next ➜</b>
+              </Button>
+            </Row>
           </Form>
         </div>
       </div>
@@ -107,5 +128,10 @@ const divStyle = {
   boxShadow: "1px 1px 20px",
   borderRadius: "10px",
   padding: "30px",
+  marginLeft: "auto",
+  marginRight: "auto",
+  width: "100%",
+  maxWidth: "600px",
+  minHeight: "300px",
   backgroundColor: "white",
 };

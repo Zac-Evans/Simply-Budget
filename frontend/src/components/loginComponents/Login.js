@@ -6,6 +6,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Logo from "../../images/simply-logo-white.png";
+import { clamp } from "lodash";
 
 export default class Login extends Component {
   constructor() {
@@ -36,6 +38,7 @@ export default class Login extends Component {
       .then((res) => {
         this.setState({ loggedIn: true });
         localStorage.setItem("userId", res.data[0].id);
+        window.location.href = "/dashboard";
       })
       .catch(() => {
         this.setState({ show: true });
@@ -48,9 +51,6 @@ export default class Login extends Component {
   };
 
   render() {
-    if (this.state.loggedIn) {
-      return <Redirect push to="/dashboard" />;
-    }
     if (this.state.show) {
       return (
         <FailModal
@@ -62,29 +62,44 @@ export default class Login extends Component {
     }
     return (
       <div
-        className="vh-100"
         style={{
-          paddingTop: "10%",
           backgroundColor: "rgb(71, 117, 62)",
+          minHeight: "100vh",
         }}
+        className="d-flex flex-column justify-content-center align-items-stretch"
       >
-        <div style={divStyle} className="mx-auto">
-          <Form
-            className="mx-auto"
-            style={{ maxWidth: "400px" }}
-            onSubmit={this.handleSubmit}
-          >
+        <div className="d-flex justify-content-around">
+          <Col className="d-flex justify-content-end align-items-center">
+            <Link to="/">
+              <h5 className="text-white p-0 m-0">← Back</h5>
+            </Link>
+          </Col>
+          <Col className="d-flex justify-content-center m-0 p-0">
             <img
-              className="mb-2"
-              style={{ width: "75px", height: "75px", marginLeft: "38%" }}
-              src="https://d338t8kmirgyke.cloudfront.net/icons/icon_pngs/000/000/433/original/signin1.png?width=75"
-              alt="icon"
+              width="200px"
+              height="120px"
+              className="mb-4 ml-0 mr-0 p-0"
+              src={Logo}
             />
-            <p className="mb-4 text-center" style={{ fontSize: "30px" }}>
+          </Col>
+          <Col />
+        </div>
+
+        <div style={divStyle} className="mx-auto">
+          <Form className="mx-auto " onSubmit={this.handleSubmit}>
+            <div className="d-flex justify-content-center">
+              <img
+                style={{ height: "10vh", maxHeight: "70px" }}
+                src="https://d338t8kmirgyke.cloudfront.net/icons/icon_pngs/000/000/433/original/signin1.png?width=75"
+                alt="icon"
+              />
+            </div>
+            <p
+              className="mb-4 text-center"
+              style={{ fontSize: "clamp(16px,3vh,24px)" }}
+            >
               Login to your
-              <strong style={{ color: "rgb(71, 117, 62)" }}>
-                Simply Budget
-              </strong>
+              <b style={{ color: "rgb(71, 117, 62)" }}> Simply Budget </b>
               account
             </p>
             <Form.Group>
@@ -107,31 +122,27 @@ export default class Login extends Component {
                 style={inputStyle}
               />
             </Form.Group>
-            <Row>
-              <Col>
-                <Link to="/register">
-                  <Button
-                    style={{
-                      border: "1px solid rgb(173, 173, 173)",
-                      backgroundColor: "rgb(71, 117, 62)",
-                      width: "100%",
-                    }}
-                  >
-                    Create account
-                  </Button>
-                </Link>
-              </Col>
+            <Row className="text-center d-flex justify-content-center m-2">
               <Col>
                 <Button
                   style={{
                     border: "1px solid rgb(173, 173, 173)",
                     backgroundColor: "rgb(71, 117, 62)",
-                    width: "100%",
+                    width: "70%",
                   }}
                   type="submit"
                 >
-                  Submit
+                  <b>Submit</b>
                 </Button>
+              </Col>
+            </Row>
+
+            <Row className="text-center d-flex justify-content-center mt-4">
+              <Col>
+                Not registered? <br />
+                <Link to="/register">
+                  <b> Create an account!</b>
+                </Link>
               </Col>
             </Row>
           </Form>
@@ -154,6 +165,10 @@ const divStyle = {
   boxShadow: "1px 1px 20px",
   borderRadius: "10px",
   padding: "30px",
+  marginLeft: "auto",
+  marginRight: "auto",
+  width: "100%",
   maxWidth: "400px",
+  minHeight: "300px",
   backgroundColor: "white",
 };

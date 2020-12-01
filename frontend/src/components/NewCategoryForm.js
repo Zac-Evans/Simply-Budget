@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Col } from "react-bootstrap";
+import { Form, Col, Row, InputGroup } from "react-bootstrap";
 import { Button } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
@@ -32,6 +32,8 @@ class NewCategoryForm extends Component {
         this.setState({ Show: false, Showing: false });
       }, 2000);
     }
+    e.preventDefault();
+
     axios
       .post(
         `https://simply-budget-backend.herokuapp.com/user/${userId}/budget/create`,
@@ -41,7 +43,7 @@ class NewCategoryForm extends Component {
           budget_remaining: this.state.category_budget,
         }
       )
-      .then((response) => {
+      .then(() => {
         if (this.state.Showing) return;
 
         e.preventDefault();
@@ -61,19 +63,21 @@ class NewCategoryForm extends Component {
             price: "",
             purchase_notes: "",
           });
-        }, 3100).catch((error) => {
-          console.log(error);
-        });
+        }, 3500);
+      })
+      .then(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
   render() {
     const renderSnackBar = () => {
-      if (
-        !this.state.category_name ||
-        !this.state.category_budget ||
-        !this.state.budget_remaining
-      ) {
+      if (!this.state.category_name || !this.state.category_budget) {
         return (
           <ReactSnackBar
             Icon={<span>🦄</span>}
@@ -90,7 +94,7 @@ class NewCategoryForm extends Component {
             value="Show"
             Show={this.state.Show}
           >
-            Transaction added!
+            Budget added!
           </ReactSnackBar>
         );
       }
@@ -98,14 +102,14 @@ class NewCategoryForm extends Component {
     return (
       <div>
         <Form className=" m-4 d-flex flex-column align-items-center">
-          <h3>Create New Category</h3>
+          <h3>Create New Budget</h3>
           <img
             src="https://img.icons8.com/cute-clipart/200/000000/money-box.png"
             width="100px"
             className="m-2"
           />
-          <Form.Row>
-            <Form.Group
+          <Form.Row className="d-flex justify-content-center">
+            {/* <Form.Group
               className="text-center"
               as={Col}
               controlId="formGridCategoryName"
@@ -126,29 +130,29 @@ class NewCategoryForm extends Component {
             </Form.Group>
             <h6 className="d-flex align-self-center m-2">
               <b>OR</b>
-            </h6>
+            </h6> */}
             <Form.Group
               className="text-center"
               as={Col}
               controlId="formGridCustomCategory"
             >
               <Form.Label>
-                <b>*Custom Category</b>
+                <b>*Budget Name</b>
               </Form.Label>
               <Form.Control
                 value={this.state.category_name}
                 onChange={this.handleChange}
                 type="text"
                 name="category_name"
-                placeholder="Clothes"
+                placeholder="Coffee"
               />
             </Form.Group>
           </Form.Row>
           <hr />
-          <Form.Row className="d-flex justify-content-start">
+          <Form.Row className="d-flex justify-content-center">
             <Form.Group>
               <FontAwesomeIcon
-                className="text-center m-4"
+                className="text-center mr-2 mt-3"
                 style={{ fontSize: "60px" }}
                 icon={faCoffee}
               />
@@ -156,23 +160,33 @@ class NewCategoryForm extends Component {
 
             <Form.Group controlId="formGridAddress1">
               <Form.Label>
-                <b>*Monthly Budget</b>
+                <b>*Monthly Allowance</b>
               </Form.Label>
-              <Form.Control
-                placeholder="$100"
-                name="category_budget"
-                onChange={this.handleChange}
-              />
+              <InputGroup className="mb-2">
+                <InputGroup.Prepend>
+                  <InputGroup.Text>$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  placeholder="100.00"
+                  name="category_budget"
+                  onChange={this.handleChange}
+                />
+              </InputGroup>
             </Form.Group>
           </Form.Row>
-
-          <Button
-            variant="contained"
-            type="submit"
-            onClick={this.handleCategorySubmit}
-          >
-            Create Category
-          </Button>
+          <Row className="d-flex justify-content-center">
+            <Button className="m-4" variant="contained" type="submit">
+              Back
+            </Button>
+            <Button
+              className="m-4 text-white"
+              variant="contained"
+              style={{ backgroundColor: "rgb(71, 117, 62)" }}
+              onClick={this.handleCategorySubmit}
+            >
+              <b>Add</b>
+            </Button>
+          </Row>
           <p className="mt-3 mb-0">* required</p>
           {renderSnackBar()}
         </Form>
