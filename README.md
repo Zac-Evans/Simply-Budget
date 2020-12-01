@@ -43,22 +43,22 @@ We wanted to create a budgeting app that stores user data online and can be acce
 ## Tech/framework used
 
 ### Frontend
--React 
--Redux 
--React-Router
--Redux-Thunk
--Bootstrap
--Material-UI
--HTML5
--CSS3
+- React 
+- Redux 
+- React-Router
+- Redux-Thunk
+- Bootstrap
+- Material-UI
+- HTML5
+- CSS3
 -Deployed via Netlify
 
 ### Backend
--Node.js
--PostgreSQL
--Express.js
--Sequelize
--Deployed via Heroku
+- Node.js
+- PostgreSQL
+- Express.js
+- Sequelize
+- Deployed via Heroku
 
 ## Features
 <ul>
