@@ -68,11 +68,6 @@ We wanted to create a budgeting app that stores user data online and can be acce
  <li>Sort your purchases by category to see where your money goes</li>
   </ul>
 
-
-![Categories](https://imgur.com/HAz0ZT5 "Categories")
-percentage circles show how much you have left to spend on your budget
-![Dashboard](https://imgur.com/N0OIru "Dashboard")
-
 ## Credits
 Simply Budget was created by:
  David Sullivan, 
