@@ -1,5 +1,5 @@
 # Simply Budget
-# Motivation
+## Motivation
  <b>"We must consult our means rather than our wishes." ― George Washington</b> <br>
 We wanted to create a budgeting app that stores user data online and can be accessed anywhere. It would also be user friendly and easy to read. Users can create an account, add transactions and budgets and keep track of their spending month to month. This app was created as a part of the DigitalCrafts 26 week Flex full stack program. 
 ## Project Requirements
@@ -40,10 +40,27 @@ We wanted to create a budgeting app that stores user data online and can be acce
   - No super long files
   - No "spaghetti code"
   - Hint: `create-react-app` makes this easy for the front end
-# Tech/framework used
-Frontend - React, Redux, React-Router, Redux-Thunk, Bootstrap, Material-UI, HTML5, CSS3, Deployed via Netlify
-Backend - Node.js, PostgreSQL, Express,js, Sequelize, Deployed via Heroku
-# Features
+## Tech/framework used
+
+### Frontend
+-React 
+-Redux 
+-React-Router
+-Redux-Thunk
+-Bootstrap
+-Material-UI
+-HTML5
+-CSS3
+-Deployed via Netlify
+
+### Backend
+-Node.js
+-PostgreSQL
+-Express.js
+-Sequelize
+-Deployed via Heroku
+
+## Features
 <ul>
  <li>Create an account and keep your budgets safe wherever you go</li>
  <li>Add budgets and transactions to visualize your spending</li>
@@ -56,7 +73,7 @@ Backend - Node.js, PostgreSQL, Express,js, Sequelize, Deployed via Heroku
 percentage circles show how much you have left to spend on your budget
 ![Dashboard](https://imgur.com/N0OIru "Dashboard")
 
-# Credits
+## Credits
 Simply Budget was created by:
  David Sullivan, 
  Spencer Forman,
