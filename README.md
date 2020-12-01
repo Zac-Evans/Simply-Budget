@@ -1,4 +1,4 @@
-# Simply Budget
+# Simply Budget.
 ## Motivation
  <b>"We must consult our means rather than our wishes." ― George Washington</b> <br>
 We wanted to create a budgeting app that stores user data online and can be accessed anywhere. It would also be user friendly and easy to read. Users can create an account, add transactions and budgets and keep track of their spending month to month. This app was created as a part of the DigitalCrafts 26 week Flex full stack program. 
