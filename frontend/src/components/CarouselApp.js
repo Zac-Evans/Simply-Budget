@@ -4,6 +4,9 @@ import { Carousel, Col, Image, Row } from "react-bootstrap";
 import "../index.css";
 import { Button } from "@material-ui/core";
 import HeaderCarousel from "./HeaderCarousel";
+import Image1 from '../images/carousel-1.png'
+import Image2 from '../images/carousel-2.png'
+import Image3 from '../images/carousel-3.png'
 
 export default function CarouselApp() {
   return (
@@ -37,7 +40,8 @@ export default function CarouselApp() {
             >
               <Image
                 style={{ width: "50vw", height: "40vh" }}
-                src="https://www.flaticon.com/svg/static/icons/svg/2910/2910922.svg"
+                src={Image1}
+                
               />
             </Col>
             <Col
@@ -87,7 +91,8 @@ export default function CarouselApp() {
             >
               <Image
                 style={{ width: "50vw", height: "40vh" }}
-                src="https://www.flaticon.com/svg/static/icons/svg/3004/3004164.svg"
+                src={Image2}
+                
               />
             </Col>
             <Col
@@ -136,7 +141,7 @@ export default function CarouselApp() {
             >
               <Image
                 style={{ width: "50vw", height: "40vh" }}
-                src="https://www.flaticon.com/svg/static/icons/svg/2942/2942269.svg"
+                src={Image3}
               />
             </Col>
             <Col
